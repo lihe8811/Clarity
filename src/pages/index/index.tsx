@@ -279,8 +279,8 @@ const QuizScreen = ({ onClose, onSubmit }: QuizScreenProps) => {
               onClick={() => setSelected(option.id)}
             >
               <View className="option-card__icon">
-                {showCorrect && <Text className="fa-solid fa-check"></Text>}
-                {showWrong && <Text className="fa-solid fa-xmark"></Text>}
+                {showCorrect && <Text className="material-symbols-rounded">check</Text>}
+                {showWrong && <Text className="material-symbols-rounded">close</Text>}
               </View>
               <Text className="option-card__text">{option.text}</Text>
             </View>
@@ -291,7 +291,7 @@ const QuizScreen = ({ onClose, onSubmit }: QuizScreenProps) => {
       {hasSubmitted && (
         <View className="inline-feedback">
           <View className={`inline-feedback__icon ${isCorrect ? 'ok' : 'bad'}`}>
-            <Text className={`fa-solid ${isCorrect ? 'fa-check' : 'fa-xmark'}`}></Text>
+            <Text className="material-symbols-rounded">{isCorrect ? 'check' : 'close'}</Text>
           </View>
           <View>
             <Text className={`inline-feedback__title ${isCorrect ? 'ok' : 'bad'}`}>
@@ -344,7 +344,7 @@ const MCFeedbackScreen = ({
 
       <View className="mc-feedback__status">
         <View className={`mc-feedback__badge ${isCorrect ? 'ok' : 'bad'}`}>
-          <Text className={`fa-solid ${isCorrect ? 'fa-check' : 'fa-xmark'}`}></Text>
+          <Text className="material-symbols-rounded">{isCorrect ? 'check' : 'close'}</Text>
         </View>
         <Text className={`mc-feedback__title ${isCorrect ? 'ok' : 'bad'}`}>
           {isCorrect ? 'Correct!' : 'Incorrect'}
@@ -470,7 +470,7 @@ const VoiceFeedbackScreen = ({ onNext, onBack }: VoiceFeedbackScreenProps) => (
 
     <View className="pill pill--success">
       <View className="pill__icon">
-        <Text className="fa-solid fa-check"></Text>
+        <Text className="material-symbols-rounded">check</Text>
       </View>
       <Text>Correct!</Text>
     </View>
