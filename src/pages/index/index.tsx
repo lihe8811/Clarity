@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Image, ScrollView, Text, View } from '@tarojs/components';
+import { Button, Image, ScrollView, Text, View } from '@tarojs/components';
 import {
   ARTICLES,
   DEMO_USER_STATS,
@@ -18,7 +18,14 @@ interface LandingScreenProps {
 const LandingScreen = ({ onGetStarted }: LandingScreenProps) => (
   <ScrollView scrollY enableFlex className="screen landing">
     <View className="landing__content">
-      <View className="landing__icon">📰</View>
+      <View className="landing__badge">
+        <Text>Adaptive ESL News</Text>
+        <Text className="landing__dot">•</Text>
+        <Text>Built for growth</Text>
+      </View>
+      <View className="landing__icon">
+        <View className="icon icon--news"></View>
+      </View>
       <Text className="landing__title">Stay Informed, Get Smarter.</Text>
       <Text className="landing__subtitle">
         Your daily dose of news, designed to boost your reading skills.
@@ -30,11 +37,39 @@ const LandingScreen = ({ onGetStarted }: LandingScreenProps) => (
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_cs5TjlaT4pfKDh_ZooXnhYOYGI8zwkUHOc7ukiCoFIWTjyBJmgX11WwdjakJepV2QcUbLkJRj4Qp2_XTdZIeuwu42PC6-HeFkL7FqAHXnt3_PTjwKtpNxHBpSY0BpKQP6dnCF7UqQvC46hr2iisz2rIMZ2uH30JQxk29oAceW52BEtTze07iI1NWGD_GHVBfJHWqx2e16igAaJVV-QyyBrldyL9p6aBaOTHUClw55X-Tna79DECzAanORzW_6VJjY5_FQykkOuE"
         />
       </View>
+      <View className="landing__highlights">
+        <View className="pill pill--soft">
+          <Text>Daily curated briefings</Text>
+        </View>
+        <View className="pill pill--soft">
+          <Text>Level-aware questions</Text>
+        </View>
+        <View className="pill pill--soft">
+          <Text>Voice & reading practice</Text>
+        </View>
+      </View>
+      <View className="landing__stats">
+        <View className="mini-card">
+          <Text className="mini-card__label">Lexile</Text>
+          <Text className="mini-card__value">{DEMO_USER_STATS.lexileScore}L</Text>
+          <Text className="mini-card__hint">+15 this week</Text>
+        </View>
+        <View className="mini-card">
+          <Text className="mini-card__label">Accuracy</Text>
+          <Text className="mini-card__value">{DEMO_USER_STATS.accuracy}%</Text>
+          <Text className="mini-card__hint">Steady improvement</Text>
+        </View>
+        <View className="mini-card">
+          <Text className="mini-card__label">Quizzes</Text>
+          <Text className="mini-card__value">{DEMO_USER_STATS.quizzesDone}</Text>
+          <Text className="mini-card__hint">Last 30 days</Text>
+        </View>
+      </View>
     </View>
     <View className="cta">
-      <View className="btn btn-primary" onClick={onGetStarted}>
+      <Button className="btn btn-primary" onClick={onGetStarted}>
         <Text>Get Started</Text>
-      </View>
+      </Button>
       <Text className="cta__hint">
         Already have an account? <Text className="cta__link">Log In</Text>
       </Text>
@@ -50,6 +85,7 @@ interface FeedScreenProps {
 const NewsFeedScreen = ({ onArticleClick, onProfileClick }: FeedScreenProps) => {
   const [activeCategory, setActiveCategory] = useState('All');
   const categories = ['All', 'Science', 'Technology', 'World', 'Arts', 'History'];
+  const featuredArticle = ARTICLES[0];
   const filteredArticles = useMemo(
     () =>
       activeCategory === 'All'
@@ -61,10 +97,23 @@ const NewsFeedScreen = ({ onArticleClick, onProfileClick }: FeedScreenProps) => 
   return (
     <ScrollView scrollY enableFlex className="screen feed">
       <View className="app-bar">
-        <Text className="app-bar__icon">☰</Text>
+        <View className="app-bar__icon">
+          <View className="icon icon--menu" />
+        </View>
         <Text className="app-bar__title">Latest News</Text>
         <View className="app-bar__avatar" onClick={onProfileClick}>
           <Text>AJ</Text>
+        </View>
+      </View>
+
+      <View className="feed-hero" onClick={() => onArticleClick(featuredArticle.id)}>
+        <View className="feed-hero__badge">Editor&apos;s pick</View>
+        <Text className="feed-hero__title">{featuredArticle.title}</Text>
+        <Text className="feed-hero__meta">
+          {featuredArticle.source} • {featuredArticle.timeAgo}
+        </Text>
+        <View className="feed-hero__image">
+          <Image mode="aspectFill" src={featuredArticle.imageUrl} />
         </View>
       </View>
 
@@ -94,16 +143,18 @@ const NewsFeedScreen = ({ onArticleClick, onProfileClick }: FeedScreenProps) => 
                 {article.source} • {article.timeAgo}
               </Text>
               {article.progress > 0 && (
-                <View className="progress">
-                  <View className="progress__track">
-                    <View
-                      className="progress__bar"
-                      style={{ width: `${article.progress}%` }}
-                    ></View>
-                  </View>
-                  <Text className="progress__icon">🎯</Text>
-                </View>
-              )}
+        <View className="progress">
+          <View className="progress__track">
+            <View
+              className="progress__bar"
+              style={{ width: `${article.progress}%` }}
+            ></View>
+          </View>
+          <View className="progress__icon">
+            <View className="icon icon--target" />
+          </View>
+        </View>
+      )}
             </View>
           </View>
         ))}
@@ -111,7 +162,7 @@ const NewsFeedScreen = ({ onArticleClick, onProfileClick }: FeedScreenProps) => 
 
       <View className="fab">
         <View className="fab__button">
-          <Text>🏆</Text>
+          <View className="icon icon--trophy" />
         </View>
       </View>
     </ScrollView>
@@ -132,10 +183,10 @@ const ArticleScreen = ({ article, onBack, onStartQuiz }: ArticleScreenProps) => 
       </View>
       <View className="article__actions">
         <View className="icon-btn">
-          <Text>↗</Text>
+          <View className="icon icon--share" />
         </View>
         <View className="icon-btn">
-          <Text>★</Text>
+          <View className="icon icon--save" />
         </View>
       </View>
     </View>
@@ -170,9 +221,9 @@ const ArticleScreen = ({ article, onBack, onStartQuiz }: ArticleScreenProps) => 
     </View>
 
     <View className="footer-cta">
-      <View className="btn btn-primary" onClick={onStartQuiz}>
+      <Button className="btn btn-primary" onClick={onStartQuiz}>
         <Text>Start Questions</Text>
-      </View>
+      </Button>
     </View>
   </ScrollView>
 );
@@ -184,58 +235,81 @@ interface QuizScreenProps {
 
 const QuizScreen = ({ onClose, onSubmit }: QuizScreenProps) => {
   const [selected, setSelected] = useState<string | null>(null);
-  const handleSubmit = () => {
-    if (selected) {
-      onSubmit(selected);
-    }
+  const hasSubmitted = !!selected;
+  const isCorrect = selected === MOCK_QUIZ.correctOptionId;
+
+  const handleNext = () => {
+    if (!selected) return;
+    onSubmit(selected);
   };
 
   return (
-    <ScrollView scrollY enableFlex className="screen quiz">
-      <View className="quiz__top">
-        <View className="icon-btn" onClick={onClose}>
+    <ScrollView scrollY enableFlex className="screen quiz-screen">
+      <View className="top-row">
+        <View className="circle-btn" onClick={onClose}>
           <Text>×</Text>
         </View>
-        <View className="quiz__title">
-          <Text className="quiz__label">Comprehension</Text>
-          <Text className="quiz__progress-label">3/10 Questions</Text>
+        <View className="top-row__title">
+          <Text className="eyebrow">Comprehension</Text>
+          <Text className="muted">3/10 Questions</Text>
         </View>
-        <View className="quiz__spacer" />
+        <View className="top-row__spacer" />
       </View>
 
-      <View className="progress-bar progress-bar--thick">
-        <View className="progress-bar__fill" style={{ width: '30%' }}></View>
+      <View className="bar bar--thin">
+        <View className="bar__fill" style={{ width: '30%' }} />
       </View>
 
-      <View className="quiz__question">
-        <Text>{MOCK_QUIZ.text}</Text>
+      <View className="question-block">
+        <Text className="question-text">{MOCK_QUIZ.text}</Text>
       </View>
 
-      <View className="quiz__options">
+      <View className="option-list">
         {MOCK_QUIZ.options.map(option => {
           const isSelected = selected === option.id;
+          const isAnswer = option.id === MOCK_QUIZ.correctOptionId;
+          const showCorrect = hasSubmitted && isAnswer;
+          const showWrong = hasSubmitted && isSelected && !isAnswer;
           return (
             <View
               key={option.id}
-              className={`option ${isSelected ? 'option--selected' : ''}`}
+              className={`option-card ${showCorrect ? 'option-card--correct' : ''} ${
+                showWrong ? 'option-card--wrong' : ''
+              } ${!hasSubmitted && isSelected ? 'option-card--active' : ''}`}
               onClick={() => setSelected(option.id)}
             >
-              <View className={`option__marker ${isSelected ? 'option__marker--on' : ''}`}>
-                {isSelected && <Text>✓</Text>}
+              <View className="option-card__icon">
+                {showCorrect && <Text className="fa-solid fa-check"></Text>}
+                {showWrong && <Text className="fa-solid fa-xmark"></Text>}
               </View>
-              <Text className="option__text">{option.text}</Text>
+              <Text className="option-card__text">{option.text}</Text>
             </View>
           );
         })}
       </View>
 
-      <View className="footer-cta">
-        <View
-          className={`btn ${selected ? 'btn-primary' : 'btn-disabled'}`}
-          onClick={handleSubmit}
-        >
-          <Text>Submit Answer</Text>
+      {hasSubmitted && (
+        <View className="inline-feedback">
+          <View className={`inline-feedback__icon ${isCorrect ? 'ok' : 'bad'}`}>
+            <Text className={`fa-solid ${isCorrect ? 'fa-check' : 'fa-xmark'}`}></Text>
+          </View>
+          <View>
+            <Text className={`inline-feedback__title ${isCorrect ? 'ok' : 'bad'}`}>
+              {isCorrect ? 'Correct!' : 'Incorrect'}
+            </Text>
+            <Text className="inline-feedback__hint">{MOCK_QUIZ.explanation}</Text>
+          </View>
         </View>
+      )}
+
+      <View className="footer-cta">
+        <Button
+          className={`btn ${hasSubmitted ? 'btn-primary' : 'btn-disabled'}`}
+          onClick={handleNext}
+          disabled={!hasSubmitted}
+        >
+          <Text>Next Question</Text>
+        </Button>
       </View>
     </ScrollView>
   );
@@ -254,52 +328,48 @@ const MCFeedbackScreen = ({
   explanation,
   onNext,
 }: FeedbackScreenProps) => {
-  const [showExplanation, setShowExplanation] = useState(!isCorrect);
+  const [showExplanation, setShowExplanation] = useState(true);
 
   return (
-    <ScrollView scrollY enableFlex className="screen feedback">
+    <ScrollView scrollY enableFlex className="screen mc-feedback">
       <View className="section">
         <View className="section__header">
           <Text className="section__label">Progress</Text>
           <Text className="section__label">3/5</Text>
         </View>
-        <View className="progress-bar progress-bar--thin">
-          <View className="progress-bar__fill" style={{ width: '60%' }}></View>
+        <View className="bar bar--thin">
+          <View className="bar__fill" style={{ width: '60%' }} />
         </View>
       </View>
 
-      <View className="feedback__card">
-        <View className={`feedback__icon ${isCorrect ? 'feedback__icon--ok' : 'feedback__icon--bad'}`}>
-          <Text>{isCorrect ? '✓' : '✕'}</Text>
+      <View className="mc-feedback__status">
+        <View className={`mc-feedback__badge ${isCorrect ? 'ok' : 'bad'}`}>
+          <Text className={`fa-solid ${isCorrect ? 'fa-check' : 'fa-xmark'}`}></Text>
         </View>
-        <Text className={`feedback__title ${isCorrect ? 'text-ok' : 'text-bad'}`}>
+        <Text className={`mc-feedback__title ${isCorrect ? 'ok' : 'bad'}`}>
           {isCorrect ? 'Correct!' : 'Incorrect'}
         </Text>
-        <Text className="feedback__subtitle">
+        <Text className="mc-feedback__subtitle">
           {isCorrect
             ? 'Great job on that one! Keep up the amazing work!'
             : "Do not worry, let us learn from this and keep moving forward."}
         </Text>
+      </View>
 
-        {(showExplanation || !isCorrect) && (
-          <View className="feedback__explanation">
-            <Text className="feedback__label">The correct answer was:</Text>
-            <Text className="feedback__answer">{correctOptionText}</Text>
-            <View className="divider" />
-            <Text className="feedback__detail">{explanation}</Text>
-          </View>
-        )}
+      <View className="mc-feedback__card">
+        <Text className="mc-feedback__label">The correct answer was:</Text>
+        <Text className="mc-feedback__answer">{correctOptionText}</Text>
+        <View className="divider" />
+        {showExplanation && <Text className="mc-feedback__detail">{explanation}</Text>}
       </View>
 
       <View className="footer-cta">
-        {!showExplanation && isCorrect && (
-          <View className="btn btn-ghost" onClick={() => setShowExplanation(true)}>
-            <Text>Show Explanation</Text>
-          </View>
-        )}
-        <View className="btn btn-primary" onClick={onNext}>
+        <Button className="btn btn-ghost" onClick={() => setShowExplanation(prev => !prev)}>
+          <Text>{showExplanation ? 'Hide Explanation' : 'Show Explanation'}</Text>
+        </Button>
+        <Button className="btn btn-primary" onClick={onNext}>
           <Text>Next Question</Text>
-        </View>
+        </Button>
       </View>
     </ScrollView>
   );
@@ -325,40 +395,42 @@ const VoiceQuizScreen = ({ onClose, onFinish }: VoiceQuizScreenProps) => {
   };
 
   return (
-    <ScrollView scrollY enableFlex className="screen voice">
-      <View className="app-bar app-bar--simple">
-        <View className="icon-btn icon-btn--ghost" onClick={onClose}>
+    <ScrollView scrollY enableFlex className="screen voice-screen">
+      <View className="top-row">
+        <View className="circle-btn circle-btn--ghost" onClick={onClose}>
           <Text>×</Text>
         </View>
-        <Text className="app-bar__title">Comprehension Quiz</Text>
-        <View className="app-bar__spacer" />
-      </View>
-
-      <View className="section">
-        <View className="section__progress">
-          <View className="progress-bar progress-bar--rounded">
-            <View className="progress-bar__fill" style={{ width: '80%' }}></View>
-          </View>
-          <Text className="section__count">
-            <Text className="highlight">4</Text>/5
-          </Text>
+        <View className="top-row__title">
+          <Text>Comprehension Quiz</Text>
         </View>
+        <View className="top-row__spacer" />
       </View>
 
-      <View className="voice__question">
-        <Text>Why was the Mars rover mission significant?</Text>
+      <View className="progress-line">
+        <View className="bar bar--thin">
+          <View className="bar__fill" style={{ width: '40%' }} />
+        </View>
+        <Text className="progress-line__count">2/5</Text>
       </View>
 
-      <View className="voice__mic-area">
+      <View className="question-block">
+        <Text className="question-text">
+          Based on the article, what is the main reason for the recent decline in bee populations?
+        </Text>
+      </View>
+
+      <View className="voice-mic-area">
         <View
-          className={`voice__mic ${isRecording ? 'voice__mic--recording' : ''}`}
+          className={`voice-mic ${isRecording ? 'voice-mic--recording' : ''}`}
           onClick={toggleRecording}
         >
-          <Text className="voice__mic-icon">{isRecording ? '■' : '🎤'}</Text>
+          <View className={`voice-mic__icon ${isRecording ? 'voice-mic__icon--stop' : ''}`}>
+            <View className={`icon ${isRecording ? 'icon--stop' : 'icon--mic'}`} />
+          </View>
         </View>
       </View>
 
-      <Text className="voice__hint">
+      <Text className="voice-hint">
         {isRecording
           ? 'Listening... Tap to stop.'
           : hasRecorded
@@ -367,12 +439,13 @@ const VoiceQuizScreen = ({ onClose, onFinish }: VoiceQuizScreenProps) => {
       </Text>
 
       <View className="footer-cta">
-        <View
+        <Button
           className={`btn ${hasRecorded ? 'btn-primary' : 'btn-disabled'}`}
           onClick={hasRecorded ? onFinish : undefined}
+          disabled={!hasRecorded}
         >
           <Text>Submit</Text>
-        </View>
+        </Button>
       </View>
     </ScrollView>
   );
@@ -385,42 +458,50 @@ interface VoiceFeedbackScreenProps {
 
 const VoiceFeedbackScreen = ({ onNext, onBack }: VoiceFeedbackScreenProps) => (
   <ScrollView scrollY enableFlex className="screen voice-feedback">
-    <View className="app-bar app-bar--simple">
-      <View className="icon-btn icon-btn--ghost" onClick={onBack}>
+    <View className="top-row top-row--back">
+      <View className="circle-btn circle-btn--ghost" onClick={onBack}>
         <Text>←</Text>
       </View>
-      <Text className="app-bar__title">Results</Text>
-      <View className="app-bar__spacer" />
-    </View>
-
-    <View className="voice-feedback__badge">
-      <Text className="voice-feedback__icon">✅</Text>
-      <Text className="voice-feedback__title">Correct!</Text>
-    </View>
-
-    <View className="card">
-      <Text className="card__title">Why was the Mars rover mission significant?</Text>
-      <View className="qa">
-        <View className="qa__item">
-          <Text className="qa__label">Your Answer</Text>
-          <Text className="qa__text">It discovered evidence of ancient microbial life.</Text>
-        </View>
-        <View className="qa__item qa__item--correct">
-          <Text className="qa__label">Correct Answer</Text>
-          <Text className="qa__text">It discovered evidence of ancient microbial life.</Text>
-        </View>
+      <View className="top-row__title">
+        <Text>Results</Text>
       </View>
-      <View className="divider" />
-      <Text className="card__subtitle">Here is Why:</Text>
-      <Text className="card__body">
+      <View className="top-row__spacer" />
+    </View>
+
+    <View className="pill pill--success">
+      <View className="pill__icon">
+        <Text className="fa-solid fa-check"></Text>
+      </View>
+      <Text>Correct!</Text>
+    </View>
+
+    <View className="result-card">
+      <Text className="result-card__question">Why was the Mars rover mission significant?</Text>
+
+      <View className="result-card__answer">
+        <View className="result-card__chip">
+          <Text>Your Answer</Text>
+        </View>
+        <Text className="result-card__text">It discovered evidence of ancient microbial life.</Text>
+      </View>
+
+      <View className="result-card__answer result-card__answer--correct">
+        <View className="result-card__chip result-card__chip--ok">
+          <Text>Correct Answer</Text>
+        </View>
+        <Text className="result-card__text">It discovered evidence of ancient microbial life.</Text>
+      </View>
+
+      <Text className="result-card__label">Here&apos;s Why:</Text>
+      <Text className="result-card__body">
         The article states the rover&apos;s primary achievement was uncovering biosignatures, which
         are strong indicators of past life, a landmark discovery in space exploration.
       </Text>
     </View>
 
     <Text className="section__title">Supporting Text in the Article</Text>
-    <View className="card">
-      <Text className="card__body">
+    <View className="support-card">
+      <Text className="support-card__body">
         ...While analyzing rock samples from a dried-up riverbed, the rover&apos;s advanced
         instruments detected organic molecules. &quot;This is not definitive proof of life,&quot;
         cautioned lead scientist Dr. Aris Thorne, &quot;but it is a tremendously exciting sign.&quot;
@@ -431,15 +512,15 @@ const VoiceFeedbackScreen = ({ onNext, onBack }: VoiceFeedbackScreenProps) => (
         These biosignatures, preserved in ancient clay deposits, suggest that Mars may have once
         harbored conditions suitable for life...
       </Text>
-      <View className="card__link">
+      <View className="support-card__link">
         <Text className="cta__link">View full article</Text>
       </View>
     </View>
 
     <View className="footer-cta">
-      <View className="btn btn-primary" onClick={onNext}>
+      <Button className="btn btn-primary" onClick={onNext}>
         <Text>Continue to Next Question</Text>
-      </View>
+      </Button>
     </View>
   </ScrollView>
 );
@@ -460,7 +541,7 @@ const QuizResultScreen = ({ onBackToFeed }: QuizResultScreenProps) => (
 
     <View className="result__hero">
       <View className="result__medal">
-        <Text>🏅</Text>
+        <View className="icon icon--medal" />
       </View>
       <Text className="result__score">8/10</Text>
       <Text className="result__headline">Great Job!</Text>
@@ -482,7 +563,7 @@ const QuizResultScreen = ({ onBackToFeed }: QuizResultScreenProps) => (
     <View className="stats-grid">
       <View className="stat-card">
         <View className="stat-card__icon stat-card__icon--ok">
-          <Text>✓</Text>
+          <View className="icon icon--check" />
         </View>
         <View>
           <Text className="stat-card__value">8</Text>
@@ -491,7 +572,7 @@ const QuizResultScreen = ({ onBackToFeed }: QuizResultScreenProps) => (
       </View>
       <View className="stat-card">
         <View className="stat-card__icon stat-card__icon--bad">
-          <Text>✕</Text>
+          <View className="icon icon--close" />
         </View>
         <View>
           <Text className="stat-card__value">2</Text>
@@ -500,7 +581,7 @@ const QuizResultScreen = ({ onBackToFeed }: QuizResultScreenProps) => (
       </View>
       <View className="stat-card stat-card--wide">
         <View className="stat-card__icon stat-card__icon--time">
-          <Text>⏱</Text>
+          <View className="icon icon--clock" />
         </View>
         <View>
           <Text className="stat-card__value">2m 35s</Text>
@@ -510,12 +591,12 @@ const QuizResultScreen = ({ onBackToFeed }: QuizResultScreenProps) => (
     </View>
 
     <View className="footer-cta footer-cta--stacked">
-      <View className="btn btn-primary" onClick={onBackToFeed}>
+      <Button className="btn btn-primary" onClick={onBackToFeed}>
         <Text>Back to News Feed</Text>
-      </View>
-      <View className="btn btn-ghost">
+      </Button>
+      <Button className="btn btn-ghost">
         <Text>Review Answers</Text>
-      </View>
+      </Button>
     </View>
   </ScrollView>
 );
@@ -608,7 +689,9 @@ const ProfileScreen = ({ onBack }: ProfileScreenProps) => (
     <View className="card card--list">
       {RECENT_ACTIVITY.map(item => (
         <View key={item.id} className="list-item">
-          <View className="list-item__icon">📝</View>
+          <View className="list-item__icon">
+            <View className="icon icon--note"></View>
+          </View>
           <View className="list-item__body">
             <Text className="list-item__title">{item.title}</Text>
             <Text className="list-item__meta">{item.date}</Text>
