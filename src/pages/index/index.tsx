@@ -7,8 +7,8 @@ import {
   MOCK_QUIZ,
   RECENT_ACTIVITY,
   WEEKLY_PROGRESS,
-} from './data';
-import { Article, Screen } from './types';
+} from '../shared/data';
+import { Article, Screen } from '../shared/types';
 import './index.scss';
 
 interface LandingScreenProps {

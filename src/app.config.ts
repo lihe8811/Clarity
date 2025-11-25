@@ -1,5 +1,9 @@
 export default defineAppConfig({
   pages: [
+    'pages/feed/index',
+    'pages/article/index',
+    'pages/quiz/index',
+    'pages/profile/index',
     'pages/index/index'
   ],
   window: {
